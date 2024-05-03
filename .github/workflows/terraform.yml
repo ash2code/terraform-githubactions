@@ -1,40 +1,29 @@
-name: 'Terraform'
+name: 'terraform demo job'
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
+    branches: [ main ]
 
-permissions:
-  contents: read
+environment:
+  name: 'dev'
+  AWS_REGION: 'us-east-1'
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  terraform-setup:
+    name: 'setting up system to run terraform code'
     runs-on: ubuntu-latest
-    environment:
-      production:
-        name: production
-    defaults:
-      run:
-        shell: bash
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Terraform
+      - name: 'checkout code'
+        uses: actions/checkout@v2
+
+      - name: 'installing terraform'
         uses: hashicorp/setup-terraform@v1
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-      - name: Terraform Init
-        run: terraform init
-      - name: Terraform Format
-        run: terraform fmt
-      - name: Terraform Plan
-        run: terraform plan
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        env:
-          AWS_REGION: 'us-east-1'
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform apply -auto-approve -input=false
+
+      - name: 'terraform version"
+        run: terraform version
+
+
+
+
