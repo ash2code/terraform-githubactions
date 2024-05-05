@@ -5,6 +5,6 @@ data "aws_instance" "myawsinstance" {
     }
 
     depends_on = [ 
-        'aws_instance.my_instance'
+        "aws_instance.my_instance"
     ]
 }
