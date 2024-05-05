@@ -1,7 +1,7 @@
 data "aws_instance" "myawsinstance" {
     filter {
-        name = "tag:Name"
-        values = "${local.env}-instances"
+        name = "image-id"
+        values = ["ami-04b70fa74e45c3917"]
     }
 
     depends_on = [ 
