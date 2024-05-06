@@ -3,8 +3,10 @@ data "aws_instance" "myawsinstance" {
         name = "image-id"
         values = ["ami-04b70fa74e45c3917"]
     }
-
-    depends_on = [ 
-        "aws_instance.my_instance"
-    ]
+    filter {
+        name   = "instance-state-name"
+        values = ["running"]
+  } 
 }
+
+    
