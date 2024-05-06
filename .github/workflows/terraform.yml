@@ -66,6 +66,7 @@ jobs:
   terraform_plan:
     name: terraform plan
     runs-on: ubuntu-latest
+    needs: ["terraform_init"]
 
     defaults:
       run:
@@ -74,7 +75,6 @@ jobs:
     steps:
       - name: code checkout
         uses: actions/checkout@v4
-        needs: ["terraform-init"]
 
       - name: Terraform Init and plan
         run: terraform init && terraform plan
@@ -82,7 +82,7 @@ jobs:
   terraform_apply:
     name: terraform apply
     runs-on: ubuntu-latest
-    needs: ["terraform-plan"]
+    needs: ["terraform_plan"]
 
     defaults:
       run:
