@@ -12,6 +12,7 @@ permissions:
 
 env:
   name: dev
+  TERRAFORM_DESTROY: 'NO'
   ACTIONS_STEP_DEBUG: true
   AWS_REGION: us-east-1
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -65,7 +66,6 @@ jobs:
   terraform_plan:
     name: terraform plan
     runs-on: ubuntu-latest
-    needs: ["terraform_init"]
 
     defaults:
       run:
@@ -74,7 +74,7 @@ jobs:
     steps:
       - name: code checkout
         uses: actions/checkout@v4
-      
+        needs: ["terraform-init"]
 
       - name: Terraform Init and plan
         run: terraform init && terraform plan
@@ -82,7 +82,7 @@ jobs:
   terraform_apply:
     name: terraform apply
     runs-on: ubuntu-latest
-    needs: ["terraform_plan"]
+    needs: ["terraform-plan"]
 
     defaults:
       run:
@@ -92,5 +92,22 @@ jobs:
       - name: code checkout
         uses: actions/checkout@v4
 
-      - name: Terraform Init and plan
-        run: terraform init && terraform apply --auto-approve
+      - name: Terraform Init and apply
+        run: terraform init && terraform apply
+
+  terraform_destroy:
+    name: terraform destroy
+    runs-on: ubuntu-latest
+    needs: ["terraform-check"]
+    if: ${{ env.TERRAFORM_DESTROY == 'yes' }}
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Init and destroy
+        run: terraform init && terraform destroy --auto-approve
