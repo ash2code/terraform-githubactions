@@ -93,4 +93,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Terraform Init and plan
-        run: terraform init && terraform apply
+        run: terraform init && terraform apply --auto-approve
