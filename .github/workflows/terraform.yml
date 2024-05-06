@@ -19,7 +19,7 @@ env:
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
-  terraform:
+  terraform-check:
     name: Terraform
     runs-on: ubuntu-latest
     environment: production
@@ -49,6 +49,7 @@ jobs:
   terraform_init:
     name: terraform init
     runs-on: ubuntu-latest
+    needs: ["terraform-check"]
 
     defaults:
       run:
@@ -64,6 +65,7 @@ jobs:
   terraform_plan:
     name: terraform plan
     runs-on: ubuntu-latest
+    needs: ["terraform_init"]
 
     defaults:
       run:
